@@ -5,6 +5,7 @@ import 'package:wingmaninctask/models/otp_request_id.dart';
 import 'package:wingmaninctask/models/response/send_otp_response.dart';
 import 'package:wingmaninctask/providers/otp_provider.dart';
 import 'package:wingmaninctask/screens/auth/verify_otp_screen/verify_otp_screen.dart';
+import 'package:wingmaninctask/utils/globals.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const routeName = "RegistrationScreen";
@@ -82,7 +83,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           child: ElevatedButton(
                             child: const Text("Register"),
                             onPressed: () {
-                              requestOtp();
+                              if (_phoneNumberController.text.length != 10) {
+                                showSnackbar("Invalid Phone Number", 2000,
+                                    context, Colors.black);
+                              } else {
+                                requestOtp();
+                              }
                             },
                           ),
                         )
@@ -107,6 +113,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       Navigator.of(context).pushNamed(VerifyOtpScreen.routeName,
           arguments:
               OtpMobile(_phoneNumberController.text, response.requestId));
-    } else {}
+    } else {
+      showSnackbar("Failed to Process", 2000, context, Colors.black);
+    }
   }
 }

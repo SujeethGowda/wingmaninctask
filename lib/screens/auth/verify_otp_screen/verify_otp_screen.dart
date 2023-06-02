@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:wingmaninctask/models/otp_request_id.dart';
 import 'package:wingmaninctask/models/response/verify_otp_response.dart';
 import 'package:wingmaninctask/providers/otp_provider.dart';
-import 'package:wingmaninctask/screens/auth/complete_profile_screen/complete_profile_screen.dart';
+import 'package:wingmaninctask/screens/complete_profile_screen/complete_profile_screen.dart';
+import 'package:wingmaninctask/utils/globals.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   static const routeName = "VerifyOtp";
@@ -53,7 +54,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          leading: BackButton(color: Colors.black),
+          leading: const BackButton(color: Colors.black),
         ),
         body: ListView(
           children: [
@@ -136,7 +137,16 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                               child: ElevatedButton(
                                 child: const Text("Verify"),
                                 onPressed: () {
-                                  verifyOtp();
+                                  if (_1stDigit.text != "" &&
+                                      _2ndDigit.text != "" &&
+                                      _3rdDigit.text != "" &&
+                                      _4thDigit.text != "" &&
+                                      _6thDigit.text != "") {
+                                    verifyOtp();
+                                  } else {
+                                    showSnackbar("Enter Valid Otp", 2000,
+                                        context, Colors.black);
+                                  }
                                 },
                               ),
                             ),
@@ -208,11 +218,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       _isLoading = false;
     });
     if (response != null && response.status!) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute<void>(
-            builder: (BuildContext context) => const CompleteProfileScreen()),
-        ModalRoute.withName('/'),
-      );
+      Navigator.of(context).pushNamed(CompleteProfileScreen.routeName);
+    } else {
+      showSnackbar("Failed to Process", 2000, context, Colors.black);
     }
   }
 }

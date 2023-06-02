@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wingmaninctask/db/local_storage.dart';
 import 'package:wingmaninctask/providers/otp_provider.dart';
+import 'package:wingmaninctask/providers/profile_provider.dart';
 import 'package:wingmaninctask/routes.dart';
 import 'package:wingmaninctask/screens/auth/registration_screen/registration_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Prefs.init();
   runApp(const MyApp());
 }
 
@@ -18,7 +22,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<OtpProvider>(
           create: (context) => OtpProvider(),
-        )
+        ),
+        ChangeNotifierProvider<ProfileProvider>(
+          create: (context) => ProfileProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
