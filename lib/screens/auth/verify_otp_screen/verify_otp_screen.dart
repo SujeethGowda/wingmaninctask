@@ -4,6 +4,7 @@ import 'package:wingmaninctask/models/otp_request_id.dart';
 import 'package:wingmaninctask/models/response/verify_otp_response.dart';
 import 'package:wingmaninctask/providers/otp_provider.dart';
 import 'package:wingmaninctask/screens/complete_profile_screen/complete_profile_screen.dart';
+import 'package:wingmaninctask/screens/home_screen/home_screen.dart';
 import 'package:wingmaninctask/utils/globals.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
@@ -217,8 +218,13 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     setState(() {
       _isLoading = false;
     });
-    if (response != null && response.status!) {
-      Navigator.of(context).pushNamed(CompleteProfileScreen.routeName);
+    if (response != null) {
+      if (response.status! && !response.profileExists!) {
+        Navigator.of(context).pushNamed(CompleteProfileScreen.routeName);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            HomeScreen.routeName, (Route<dynamic> route) => false);
+      }
     } else {
       showSnackbar("Failed to Process", 2000, context, Colors.black);
     }
